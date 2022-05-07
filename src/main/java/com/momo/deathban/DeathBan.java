@@ -1,74 +1,77 @@
 package com.momo.deathban;
 
 import com.mojang.logging.LogUtils;
-import net.minecraft.world.level.block.Blocks;
+import com.momo.deathban.core.BanList;
+import com.momo.deathban.helpers.BanMessageParser;
+import com.momo.deathban.helpers.DateTimeCalculator;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.server.ServerStartedEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.IExtensionPoint;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.network.NetworkConstants;
 import org.slf4j.Logger;
+
+import java.util.Date;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(DeathBan.MOD_ID)
-public class DeathBan
-{
+public class DeathBan {
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
-
+    MinecraftServer server;
+    BanList banList;
     public static final String MOD_ID = "deathban";
 
-    public DeathBan()
-    {
+    public DeathBan() {
+        ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> NetworkConstants.IGNORESERVERONLY, (a, b) -> true));
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-//        // Register the enqueueIMC method for modloading
-//        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
-//        // Register the processIMC method for modloading
-//        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
+    }
 
-        // Register ourselves for server and other game events we are interested in
+
+    private void setup(final FMLCommonSetupEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    private void setup(final FMLCommonSetupEvent event)
-    {
-        // some preinit code
-        LOGGER.info("HELLO FROM PREINIT");
-        LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
+    @SubscribeEvent
+    public void onStart(ServerStartedEvent serverStartedEvent) {
+        server = serverStartedEvent.getServer();
+        banList = new BanList(server.getPlayerList().getBans());
     }
 
-//    private void enqueueIMC(final InterModEnqueueEvent event)
-//    {
-//        // Some example code to dispatch IMC to another mod
-//        InterModComms.sendTo("examplemod", "helloworld", () -> { LOGGER.info("Hello world from the MDK"); return "Hello world";});
-//    }
-//
-//    private void processIMC(final InterModProcessEvent event)
-//    {
-//        // Some example code to receive and process InterModComms from other mods
-//        LOGGER.info("Got IMC {}", event.getIMCStream().
-//                map(m->m.messageSupplier().get()).
-//                collect(Collectors.toList()));
-//    }
-//
-//    // You can use SubscribeEvent and let the Event Bus discover methods to call
-//    @SubscribeEvent
-//    public void onServerStarting(ServerStartingEvent event)
-//    {
-//        // Do something when the server starts
-//        LOGGER.info("HELLO from server starting");
-//    }
-//
-//    // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
-//    // Event bus for receiving Registry Events)
-//    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-//    public static class RegistryEvents
-//    {
-//        @SubscribeEvent
-//        public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent)
-//        {
-//            // Register a new block here
-//            LOGGER.info("HELLO from Register Block");
-//        }
-//    }
+    @SubscribeEvent
+    public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+        if(!event.getPlayer().getPersistentData().getBoolean("joinedBefore")) {
+            event.getPlayer().getPersistentData().putBoolean("joinedBefore", true);
+            event.getPlayer().sendMessage(new TranslatableComponent("Welcome!"), event.getPlayer().getUUID());
+        }
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent.ServerTickEvent event) {
+        if (this.server != null) {
+           banList.removeBanIfTimeExpire();
+        }
+    }
+
+    @SubscribeEvent(priority=EventPriority.LOWEST)
+    public void onDeath(LivingDeathEvent event) {
+        if (!event.getEntityLiving().getCommandSenderWorld().isClientSide() &&
+                event.getEntityLiving() instanceof ServerPlayer deadPlayer) {
+            String reason = BanMessageParser.deathReasonMessage(deadPlayer, event.getSource());
+            Date expire = DateTimeCalculator.getExpiryDate(0, 0, 6, 0);
+            banList.addToBanList(server, deadPlayer.getGameProfile(), expire, reason);
+        }
+    }
 }
