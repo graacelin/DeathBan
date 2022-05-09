@@ -1,7 +1,8 @@
 package com.momo.deathban.core;
 
 import com.mojang.authlib.GameProfile;
-import com.momo.deathban.helpers.BanMessageParser;
+import com.momo.deathban.DeathBan;
+import com.momo.deathban.helpers.MessageParser;
 import com.momo.deathban.helpers.DateTimeCalculator;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
@@ -23,13 +24,12 @@ public class BanList {
     public void addToBanList(MinecraftServer server, GameProfile deadPlayer, Date expire, String reason) {
         if (!userBanList.isBanned(deadPlayer)) {
             ServerPlayer serverplayer = server.getPlayerList().getPlayer(deadPlayer.getId());
-            UserBanListEntry entry = new UserBanListEntry(deadPlayer, new Date(), "DeathBan", expire, reason);
+            UserBanListEntry entry = new UserBanListEntry(deadPlayer, new Date(), DeathBan.MOD_NAME, expire, reason);
             userBanList.add(entry);
             LocalDateTime ldtCurr = LocalDateTime.ofInstant(new Date().toInstant(), ZoneId.systemDefault());
             LocalDateTime ldtExpire = LocalDateTime.ofInstant(expire.toInstant(), ZoneId.systemDefault());
 
-
-            Component component = BanMessageParser.banMessage(reason,
+            Component component = MessageParser.banMessage(reason,
                     DateTimeCalculator.getTimeRemaining(ldtCurr, ldtExpire));
             assert serverplayer != null;
             serverplayer.connection.disconnect(component);

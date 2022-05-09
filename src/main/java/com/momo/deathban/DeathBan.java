@@ -2,8 +2,8 @@ package com.momo.deathban;
 
 import com.mojang.logging.LogUtils;
 import com.momo.deathban.core.BanList;
-import com.momo.deathban.helpers.BanMessageParser;
 import com.momo.deathban.helpers.DateTimeCalculator;
+import com.momo.deathban.helpers.MessageParser;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,7 +23,6 @@ import net.minecraftforge.network.NetworkConstants;
 import org.slf4j.Logger;
 
 import java.util.Date;
-
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(DeathBan.MOD_ID)
 public class DeathBan {
@@ -32,13 +31,13 @@ public class DeathBan {
     MinecraftServer server;
     BanList banList;
     public static final String MOD_ID = "deathban";
+    public static final String MOD_NAME = "DeathBan";
 
     public DeathBan() {
-        ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> NetworkConstants.IGNORESERVERONLY, (a, b) -> true));
-        // Register the setup method for modloading
+        ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class,
+                () -> new IExtensionPoint.DisplayTest(() -> NetworkConstants.IGNORESERVERONLY, (a, b) -> true));
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
     }
-
 
     private void setup(final FMLCommonSetupEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
@@ -69,7 +68,7 @@ public class DeathBan {
     public void onDeath(LivingDeathEvent event) {
         if (!event.getEntityLiving().getCommandSenderWorld().isClientSide() &&
                 event.getEntityLiving() instanceof ServerPlayer deadPlayer) {
-            String reason = BanMessageParser.deathReasonMessage(deadPlayer, event.getSource());
+            String reason = MessageParser.deathReasonMessage(deadPlayer, event.getSource());
             Date expire = DateTimeCalculator.getExpiryDate(0, 0, 6, 0);
             banList.addToBanList(server, deadPlayer.getGameProfile(), expire, reason);
         }

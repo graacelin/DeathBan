@@ -1,12 +1,12 @@
 package com.momo.deathban.helpers;
 
+import com.momo.deathban.DeathBan;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 
-public class BanMessageParser {
-
+public class MessageParser {
 
     public static String deathReasonMessage(ServerPlayer deadPlayer, DamageSource source) {
         String deathMessage = source.getLocalizedDeathMessage(deadPlayer).getString();
@@ -25,6 +25,10 @@ public class BanMessageParser {
                 """,
                 reason, String.valueOf(expire)
         );
+    }
+
+    public static Component firstTimeMessage(ServerPlayer joinedPlayer) {
+        return new TranslatableComponent("[{0}] Welcome to the server {1}!", DeathBan.MOD_NAME, joinedPlayer);
     }
 
 }
