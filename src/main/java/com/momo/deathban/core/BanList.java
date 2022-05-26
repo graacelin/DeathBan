@@ -3,7 +3,6 @@ package com.momo.deathban.core;
 import com.mojang.authlib.GameProfile;
 import com.momo.deathban.DeathBan;
 import com.momo.deathban.helpers.MessageParser;
-import com.momo.deathban.helpers.DateTimeCalculator;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -15,7 +14,7 @@ import java.time.ZoneId;
 import java.util.Date;
 
 public class BanList {
-    private final UserBanList userBanList;
+    private UserBanList userBanList;
 
     public BanList(UserBanList banList) {
         this.userBanList = banList;
@@ -30,7 +29,7 @@ public class BanList {
             LocalDateTime ldtExpire = LocalDateTime.ofInstant(expire.toInstant(), ZoneId.systemDefault());
 
             Component component = MessageParser.banMessage(reason,
-                    DateTimeCalculator.getTimeRemaining(ldtCurr, ldtExpire));
+                    MessageParser.getTimeRemaining(ldtCurr, ldtExpire));
             assert serverplayer != null;
             serverplayer.connection.disconnect(component);
         }

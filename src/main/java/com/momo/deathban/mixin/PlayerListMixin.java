@@ -1,7 +1,6 @@
 package com.momo.deathban.mixin;
 
 import com.mojang.authlib.GameProfile;
-import com.momo.deathban.helpers.DateTimeCalculator;
 import com.momo.deathban.helpers.MessageParser;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.players.PlayerList;
@@ -36,7 +35,7 @@ public class PlayerListMixin {
                 LocalDateTime ldtCurr = LocalDateTime.ofInstant(new Date().toInstant(), ZoneId.systemDefault());
                 LocalDateTime ldtExpire = LocalDateTime.ofInstant(bans.get(profile).getExpires().toInstant(), ZoneId.systemDefault());
                 Component component = MessageParser.banMessage(userbanlistentry.getReason(),
-                        DateTimeCalculator.getTimeRemaining(ldtCurr, ldtExpire));
+                        MessageParser.getTimeRemaining(ldtCurr, ldtExpire));
                 callback.setReturnValue(component);
             }
         }
