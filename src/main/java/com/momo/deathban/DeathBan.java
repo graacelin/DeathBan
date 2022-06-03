@@ -54,12 +54,14 @@ public class DeathBan {
 
     @SubscribeEvent
     public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-        if(!event.getPlayer().getPersistentData().getBoolean("joinedBefore")) {
-            event.getPlayer().getPersistentData().putBoolean("joinedBefore", true);
+        if(!event.getPlayer().getPersistentData().getBoolean(MOD_ID + "joinedBefore")
+            && !server.isSingleplayer()) {
+            event.getPlayer().getPersistentData().putBoolean(MOD_ID + "joinedBefore", true);
             event.getPlayer().sendMessage(
                     MessageParser.firstTimeMessage((ServerPlayer) event.getPlayer()),
                     event.getPlayer().getUUID()
             );
+            LOGGER.debug("Sent welcome message to " + event.getPlayer().getName().getString());
         }
     }
 
@@ -73,7 +75,8 @@ public class DeathBan {
     @SubscribeEvent(priority=EventPriority.LOWEST)
     public void onDeath(LivingDeathEvent event) {
         if (!event.getEntityLiving().getCommandSenderWorld().isClientSide() &&
-                event.getEntityLiving() instanceof ServerPlayer deadPlayer) {
+                event.getEntityLiving() instanceof ServerPlayer deadPlayer &&
+                !server.isSingleplayer()) {
             String reason = MessageParser.deathReasonMessage(deadPlayer, event.getSource());
             Date expire = DateTimeCalculator.getExpiryDate(
                     Config.weekTime.get(),

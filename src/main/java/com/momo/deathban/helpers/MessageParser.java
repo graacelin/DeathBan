@@ -20,21 +20,19 @@ public class MessageParser {
     }
 
     public static Component banMessage(String reason, String expire) {
-
-        return new TranslatableComponent(
-                """
+        String message = String.format( """
                 §4§lYou died!§r
-                Cause of death: §e{0}§r
-                Ban expires in: §e{1}§r
+                Cause of death: §e%s§r
+                Ban expires in: §e%s§r
                 """,
-                reason, String.valueOf(expire)
-        );
+                reason, expire);
+        return new TranslatableComponent(message);
     }
 
     public static Component firstTimeMessage(ServerPlayer joinedPlayer) {
-        return new TranslatableComponent(
-                "[{0}] §bWelcome {1}! This server is currently running §4{0}§r§b. Upon death, you will be banned for §6{2}§r§b.",
-                DeathBan.MOD_NAME, joinedPlayer.getName().getString(), getBanTimeFromConfig());
+        String message = String.format("[%s] §bWelcome %s! This server is currently running §4%s§r§b. Upon death, you will be banned for §6%s§r§b.",
+                DeathBan.MOD_NAME, joinedPlayer.getName().getString(), DeathBan.MOD_NAME, getBanTimeFromConfig());
+        return new TranslatableComponent(message);
     }
 
     public static String getTimeRemaining(LocalDateTime currentDate, LocalDateTime expireDate) {
