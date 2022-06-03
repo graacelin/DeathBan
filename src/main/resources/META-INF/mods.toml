@@ -31,7 +31,7 @@ logoFile="deathban.png" #optional
 # A text field displayed in the mod UI
 # credits="Thanks for this example mod goes to Java" #optional
 # A text field displayed in the mod UI
-authors="Momo" #optional
+authors="grace" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
 DeathBan is a multiplayer server mod that adds a configurable ban timer upon player death

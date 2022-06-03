@@ -1,4 +1,4 @@
-package com.momo.deathban.config;
+package com.grace.deathban.config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 

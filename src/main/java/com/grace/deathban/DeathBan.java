@@ -1,10 +1,10 @@
-package com.momo.deathban;
+package com.grace.deathban;
 
 import com.mojang.logging.LogUtils;
-import com.momo.deathban.config.Config;
-import com.momo.deathban.core.BanList;
-import com.momo.deathban.helpers.DateTimeCalculator;
-import com.momo.deathban.helpers.MessageParser;
+import com.grace.deathban.config.Config;
+import com.grace.deathban.core.BanList;
+import com.grace.deathban.helpers.DateTimeCalculator;
+import com.grace.deathban.helpers.MessageParser;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.MinecraftForge;
