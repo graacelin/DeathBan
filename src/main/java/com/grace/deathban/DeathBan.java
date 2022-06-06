@@ -1,10 +1,10 @@
 package com.grace.deathban;
 
-import com.mojang.logging.LogUtils;
 import com.grace.deathban.config.Config;
 import com.grace.deathban.core.BanList;
 import com.grace.deathban.helpers.DateTimeCalculator;
 import com.grace.deathban.helpers.MessageParser;
+import com.mojang.logging.LogUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.MinecraftForge;
@@ -34,6 +34,7 @@ public class DeathBan {
     BanList banList;
     public static final String MOD_ID = "deathban";
     public static final String MOD_NAME = "DeathBan";
+    public static boolean deathBanOn;
 
     public DeathBan() {
         ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class,
@@ -44,6 +45,8 @@ public class DeathBan {
 
     private void setup(final FMLCommonSetupEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
+        deathBanOn = Config.weekTime.get() != 0 || Config.dayTime.get() != 0 ||
+                Config.hourTime.get() != 0 || Config.minuteTime.get() != 0;
     }
 
     @SubscribeEvent
@@ -54,14 +57,16 @@ public class DeathBan {
 
     @SubscribeEvent
     public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+        deathBanOn = Config.weekTime.get() != 0 || Config.dayTime.get() != 0 ||
+                Config.hourTime.get() != 0 || Config.minuteTime.get() != 0;
         if(!event.getPlayer().getPersistentData().getBoolean(MOD_ID + "joinedBefore")
-            && !server.isSingleplayer()) {
+            && !server.isSingleplayer() && deathBanOn) {
             event.getPlayer().getPersistentData().putBoolean(MOD_ID + "joinedBefore", true);
             event.getPlayer().sendMessage(
                     MessageParser.firstTimeMessage((ServerPlayer) event.getPlayer()),
                     event.getPlayer().getUUID()
             );
-            LOGGER.debug("Sent welcome message to " + event.getPlayer().getName().getString());
+            LOGGER.info("Sent welcome message to " + event.getPlayer().getName().getString());
         }
     }
 
@@ -72,11 +77,14 @@ public class DeathBan {
         }
     }
 
+
     @SubscribeEvent(priority=EventPriority.LOWEST)
     public void onDeath(LivingDeathEvent event) {
+        deathBanOn = Config.weekTime.get() != 0 || Config.dayTime.get() != 0 ||
+                Config.hourTime.get() != 0 || Config.minuteTime.get() != 0;
         if (!event.getEntityLiving().getCommandSenderWorld().isClientSide() &&
                 event.getEntityLiving() instanceof ServerPlayer deadPlayer &&
-                !server.isSingleplayer()) {
+                !server.isSingleplayer() && deathBanOn) {
             String reason = MessageParser.deathReasonMessage(deadPlayer, event.getSource());
             Date expire = DateTimeCalculator.getExpiryDate(
                     Config.weekTime.get(),
