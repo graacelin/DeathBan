@@ -1,6 +1,5 @@
 ![image](https://user-images.githubusercontent.com/72771682/172119067-8b51be6d-2a66-403d-aca9-ad7182cef3c6.png)
- 
-# DeathBan
+# DeathBan [![](http://cf.way2muchnoise.eu/title/deathban.svg)](https://www.curseforge.com/minecraft/mc-mods/deathban)
 DeathBan is a server-side Forge mod for Minecraft, meant to create a hardcore-like experience to SMP servers by adding a configurable ban timer upon player death.  
 
 The mod only needs to be added to the Forge server, so pure vanilla clients can also join a Forge server with DeathBan installed (given the server **only** has server-only mods).
