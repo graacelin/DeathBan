@@ -59,14 +59,13 @@ public class DeathBan {
     public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         deathBanOn = Config.weekTime.get() != 0 || Config.dayTime.get() != 0 ||
                 Config.hourTime.get() != 0 || Config.minuteTime.get() != 0;
-        if(!event.getPlayer().getPersistentData().getBoolean(MOD_ID + "joinedBefore")
+        if(!event.getEntity().getPersistentData().getBoolean(MOD_ID + "joinedBefore")
             && !server.isSingleplayer() && deathBanOn) {
-            event.getPlayer().getPersistentData().putBoolean(MOD_ID + "joinedBefore", true);
-            event.getPlayer().sendMessage(
-                    MessageParser.firstTimeMessage((ServerPlayer) event.getPlayer()),
-                    event.getPlayer().getUUID()
+            event.getEntity().getPersistentData().putBoolean(MOD_ID + "joinedBefore", true);
+            event.getEntity().sendSystemMessage(
+                    MessageParser.firstTimeMessage((ServerPlayer) event.getEntity())
             );
-            LOGGER.info("Sent welcome message to " + event.getPlayer().getName().getString());
+            LOGGER.info("Sent welcome message to " + event.getEntity().getName().getString());
         }
     }
 
@@ -82,8 +81,8 @@ public class DeathBan {
     public void onDeath(LivingDeathEvent event) {
         deathBanOn = Config.weekTime.get() != 0 || Config.dayTime.get() != 0 ||
                 Config.hourTime.get() != 0 || Config.minuteTime.get() != 0;
-        if (!event.getEntityLiving().getCommandSenderWorld().isClientSide() &&
-                event.getEntityLiving() instanceof ServerPlayer deadPlayer &&
+        if (!event.getEntity().getCommandSenderWorld().isClientSide() &&
+                event.getEntity() instanceof ServerPlayer deadPlayer &&
                 !server.isSingleplayer() && deathBanOn) {
             String reason = MessageParser.deathReasonMessage(deadPlayer, event.getSource());
             Date expire = DateTimeCalculator.getExpiryDate(

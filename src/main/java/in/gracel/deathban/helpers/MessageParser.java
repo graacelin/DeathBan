@@ -3,7 +3,6 @@ package in.gracel.deathban.helpers;
 import in.gracel.deathban.config.Config;
 import in.gracel.deathban.DeathBan;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 
@@ -26,13 +25,13 @@ public class MessageParser {
                 Ban expires in: §e%s§r
                 """,
                 reason, expire);
-        return new TranslatableComponent(message);
+        return Component.translatable(message);
     }
 
     public static Component firstTimeMessage(ServerPlayer joinedPlayer) {
         String message = String.format("[%s] §bWelcome %s! This server is currently running §4%s§r§b. Upon death, you will be banned for §6%s§r§b.",
                 DeathBan.MOD_NAME, joinedPlayer.getName().getString(), DeathBan.MOD_NAME, getBanTimeFromConfig());
-        return new TranslatableComponent(message);
+        return Component.translatable(message);
     }
 
     public static String getTimeRemaining(LocalDateTime currentDate, LocalDateTime expireDate) {
