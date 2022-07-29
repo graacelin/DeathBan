@@ -27,9 +27,9 @@ displayName="DeathBan" #mandatory
 # A URL for the "homepage" for this mod, displayed in the mod UI
 #displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="deathban.png" #optional
+logoFile="DEATHBAN(NER).png" #optional
 # A text field displayed in the mod UI
-# credits="Thanks for this example mod goes to Java" #optional
+credits="PatBox" #optional
 # A text field displayed in the mod UI
 authors="grace" #optional
 # The description text for the mod (multi line!) (#mandatory)

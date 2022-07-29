@@ -1,7 +1,7 @@
-package com.grace.deathban.mixin;
+package in.gracel.deathban.mixin;
 
 import com.mojang.authlib.GameProfile;
-import com.grace.deathban.helpers.MessageParser;
+import in.gracel.deathban.helpers.MessageParser;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.server.players.UserBanList;

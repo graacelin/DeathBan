@@ -1,8 +1,8 @@
-package com.grace.deathban.core;
+package in.gracel.deathban.core;
 
 import com.mojang.authlib.GameProfile;
-import com.grace.deathban.DeathBan;
-import com.grace.deathban.helpers.MessageParser;
+import in.gracel.deathban.DeathBan;
+import in.gracel.deathban.helpers.MessageParser;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;

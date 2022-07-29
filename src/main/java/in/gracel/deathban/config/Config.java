@@ -1,4 +1,4 @@
-package com.grace.deathban.config;
+package in.gracel.deathban.config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 

@@ -1,7 +1,7 @@
-package com.grace.deathban.helpers;
+package in.gracel.deathban.helpers;
 
-import com.grace.deathban.DeathBan;
-import com.grace.deathban.config.Config;
+import in.gracel.deathban.config.Config;
+import in.gracel.deathban.DeathBan;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;

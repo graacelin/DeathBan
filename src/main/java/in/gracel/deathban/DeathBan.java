@@ -1,9 +1,9 @@
-package com.grace.deathban;
+package in.gracel.deathban;
 
-import com.grace.deathban.config.Config;
-import com.grace.deathban.core.BanList;
-import com.grace.deathban.helpers.DateTimeCalculator;
-import com.grace.deathban.helpers.MessageParser;
+import in.gracel.deathban.config.Config;
+import in.gracel.deathban.helpers.MessageParser;
+import in.gracel.deathban.core.BanList;
+import in.gracel.deathban.helpers.DateTimeCalculator;
 import com.mojang.logging.LogUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;

@@ -1,4 +1,4 @@
-package com.grace.deathban.helpers;
+package in.gracel.deathban.helpers;
 
 import org.apache.commons.lang3.time.DateUtils;
 
