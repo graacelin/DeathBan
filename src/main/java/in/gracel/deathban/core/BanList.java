@@ -37,7 +37,7 @@ public class BanList {
 
     public void removeBanIfTimeExpire() {
         Date currDate = new Date();
-        userBanList.getEntries().removeIf(entry -> currDate.after((entry.getExpires())));
+        userBanList.getEntries().removeIf(entry -> (entry.getExpires() != null && currDate.after((entry.getExpires()))));
     }
 
     public void removeAll() {
