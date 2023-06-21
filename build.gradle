@@ -167,7 +167,7 @@ dependencies {
     // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.19.3-44.1.0'
-    implementation 'org.json:json:2023:0227'
+    implementation 'org.json:json:20230227'
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
     // Real mod deobf dependency examples - these get remapped to your current mappings
